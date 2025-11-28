@@ -41,8 +41,8 @@ const ChatInterface = ({ conversationId }: ChatInterfaceProps) => {
         <div className="space-y-4 max-w-3xl mx-auto">
           {messages.length === 0 && (
             <div className="text-center py-12 text-muted-foreground">
-              <h2 className="text-2xl font-semibold mb-2">Welcome to Aquaculture Assistant</h2>
-              <p>Ask me anything about fish farming, shrimp cultivation, pond management, or aquaculture technology!</p>
+              <h2 className="text-2xl font-semibold mb-2">Welcome to MGM Royal Trust AI</h2>
+              <p>Ask me anything about the MGM application, customers, products, orders, or inventory!</p>
             </div>
           )}
           {messages.map((message, index) => (
@@ -82,7 +82,7 @@ const ChatInterface = ({ conversationId }: ChatInterfaceProps) => {
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about aquaculture..."
+            placeholder="Ask about your MGM application..."
             disabled={isLoading}
             className="flex-1"
           />

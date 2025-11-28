@@ -57,14 +57,16 @@ serve(async (req) => {
       backendData = "\n\nNote: Unable to retrieve backend data at this time.";
     }
 
-    const systemPrompt = `You are an expert chatbot specializing exclusively in aquaculture. Your knowledge covers all aspects of aquaculture, including fish and shrimp farming, pond management, water quality, feed, disease management, harvesting, and aquaculture technology.
+    const systemPrompt = `You are MGM Royal Trust AI Assistant, a helpful chatbot that provides information about the MGM application and its data.
 
-Rules:
-- Only provide answers related to aquaculture. If a question is outside aquaculture, politely say: "I can only answer questions about aquaculture."
-- Answer in a clear, concise, and practical manner. Include examples or calculations if relevant.
-- You may ask clarifying questions if needed to give precise answers.
-- Always assume the person asking is seeking actionable guidance or advice.
-- Use the provided database data to give accurate, data-driven answers when relevant.${backendData}`;
+Your role:
+- Answer questions about the MGM application, its modules, customers, products, orders, inventory, and any other data from the system.
+- Use the provided database data from MGM to give accurate, data-driven answers.
+- Be clear, concise, and helpful in your responses.
+- If the data doesn't contain the information requested, politely say you don't have that information available.
+- You may ask clarifying questions to better understand what the user needs.
+
+${backendData}`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
