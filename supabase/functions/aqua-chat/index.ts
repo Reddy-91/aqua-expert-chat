@@ -21,25 +21,37 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
-    // Fetch data from backend server
+    // Fetch data from backend server (MGM application)
     let backendData = "";
     try {
       const credentials = btoa(`${BACKEND_USERNAME}:${BACKEND_PASSWORD}`);
-      const backendResponse = await fetch(BACKEND_URL!, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Basic ${credentials}`,
-        },
+      const baseUrl = BACKEND_URL!.replace('/login.jsp', '');
+      
+      // Fetch data from multiple MGM modules
+      const modules = ['Customer', 'Product', 'Order', 'Inventory'];
+      const modulePromises = modules.map(async (moduleName, index) => {
+        const url = `${baseUrl}/index?applicationCode=mgm&category=none&moduleName=${moduleName}&moduleIndex=${index + 1}`;
+        try {
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Basic ${credentials}`,
+            },
+          });
+          if (response.ok) {
+            const data = await response.text();
+            return `\n### ${moduleName} Module Data:\n${data}`;
+          }
+          return `\n### ${moduleName} Module: Not available`;
+        } catch (err) {
+          console.error(`Error fetching ${moduleName}:`, err);
+          return `\n### ${moduleName} Module: Error fetching data`;
+        }
       });
 
-      if (backendResponse.ok) {
-        const data = await backendResponse.text();
-        backendData = `\n\nHere is relevant data from the database:\n${data}`;
-        console.log("Successfully fetched backend data");
-      } else {
-        console.error("Backend fetch failed:", backendResponse.status);
-        backendData = "\n\nNote: Backend data temporarily unavailable.";
-      }
+      const moduleResults = await Promise.all(modulePromises);
+      backendData = `\n\nHere is relevant data from the MGM database:\n${moduleResults.join('\n')}`;
+      console.log("Successfully fetched backend data from MGM modules");
     } catch (backendError) {
       console.error("Error fetching backend data:", backendError);
       backendData = "\n\nNote: Unable to retrieve backend data at this time.";
